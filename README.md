@@ -164,7 +164,6 @@ class NewsletterSchema(ma.SQLAlchemySchema):
     title = ma.auto_field()
     published_at = ma.auto_field()
 
-
     url = ma.Hyperlinks(
         {
             "self": ma.URLFor(
@@ -181,13 +180,70 @@ newsletters_schema = NewsletterSchema(many=True)
 
 Note that `NewsletterSchema` inherits from a `SQLAlchemySchema` parent class.
 This class is not necessary to use with Marshmallow, but it does allow us to
-autogenerate some attributes using SQLAlchemy's `Model` class.
+autogenerate some attributes using SQLAlchemy's `Model` class. You can see these
+added below, with `title` and `published_at`. It is important to note here that
+this means that these are the only attributes that will appear when we look at
+newsletters- HATEOAS specifies that we should limit what is shown in
+collections- but that this can be overridden for single-record views with
+additional schemas. For the time being, we're only going to write one. (It would
+be great practice to write the second on your own, though!)
+
+Next, we set up URLs for single records and for the full collection on each
+record. This will help users- especially of the application variety- navigate
+our API. These are set for lowercase versions of our view class/function names.
+
+Lastly, we instantiate the schema for single records and for multiple records.
+We will use these to serialize data in our views.
+
+### Displaying Serialized Data in Views
+
+Now that we've made the switch from SQLAlchemy-Serializer to Marshmallow, we
+need to remove all of those `to_dict()` calls from our views. They will be
+replaced with the `schema.dump()` method, which will convert our records from
+SQL to JSON (no need for `jsonify`!). Let's look at one example below:
+
+```py
+# newsletters/app.py
+
+class Newsletters(Resource):
+
+    def get(self):
+        
+        newsletters = Newsletter.query.all()
+
+        response = make_response(
+            newsletters_schema.dump(newsletters),
+            200,
+        )
+
+        return response
+
+```
+
+Here, we carry out most tasks as normal: create, retrieve, update, delete in
+the database with SQLAlchemy, then make a response object.
+
+In making our response object, we use `newsletters_schema.dump()` to get the
+JSON for multiple newsletter records into the response object, then return it
+as normal. Running your server with `flask run`, you should see a list of
+newsletter titles and publication times with URLs for their single records and
+the full list of newsletter records.
+
+Take some time to move all of your views to this format- remove every instance
+of `to_dict()` and replace with `schema.dump()` to show our new,
+HATEOAS-compliant views to our user base. (Full solution code is available
+below.)
 
 ***
 
 ## Conclusion
 
-.
+HATEOAS is an important component of a uniform interface in RESTful APIs. It
+requires a bit of extra work to configure our views to show hyperlinks, but they
+are crucial in helping users navigate the API. Marshmallow is a serialization
+tool designed to help developers implement HATEOAS into their applications, and
+will be an important tool in streamlining the creation of RESTful APIs in your
+career.
 
 ***
 
@@ -342,6 +398,3 @@ if __name__ == '__main__':
 ## Resources
 
 - [Flask-Marshmallow](https://flask-marshmallow.readthedocs.io/en/latest/)
-
-
-[frest]: https://flask-restful.readthedocs.io/en/latest/
