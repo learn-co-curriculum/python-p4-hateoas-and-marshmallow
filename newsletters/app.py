@@ -10,33 +10,10 @@ from models import db, Newsletter
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/newsletters.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.json.compact = False
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 migrate = Migrate(app, db)
 db.init_app(app)
-
-ma = Marshmallow(app)
-
-class NewsletterSchema(ma.SQLAlchemySchema):
-
-    class Meta:
-        model = Newsletter
-
-    title = ma.auto_field()
-    published_at = ma.auto_field()
-
-
-    url = ma.Hyperlinks(
-        {
-            "self": ma.URLFor(
-                "newsletterbyid",
-                values=dict(id="<id>")),
-            "collection": ma.URLFor("newsletters"),
-        }
-    )
-
-newsletter_schema = NewsletterSchema()
-newsletters_schema = NewsletterSchema(many=True)
 
 api = Api(app)
 
@@ -61,10 +38,10 @@ class Newsletters(Resource):
 
     def get(self):
         
-        newsletters = Newsletter.query.all()
+        response_dict_list = [n.to_dict() for n in Newsletter.query.all()]
 
         response = make_response(
-            newsletters_schema.dump(newsletters),
+            jsonify(response_dict_list),
             200,
         )
 
@@ -72,16 +49,18 @@ class Newsletters(Resource):
 
     def post(self):
         
-        new_newsletter = Newsletter(
+        new_record = Newsletter(
             title=request.form['title'],
             body=request.form['body'],
         )
 
-        db.session.add(new_newsletter)
+        db.session.add(new_record)
         db.session.commit()
 
+        response_dict = new_record.to_dict()
+
         response = make_response(
-            newsletter_schema.dump(new_newsletter),
+            jsonify(response_dict),
             201,
         )
 
@@ -93,10 +72,10 @@ class NewsletterByID(Resource):
 
     def get(self, id):
 
-        newsletter = Newsletter.query.filter_by(id=id).first()
+        response_dict = Newsletter.query.filter_by(id=id).first().to_dict()
 
         response = make_response(
-            newsletter_schema.dump(newsletter),
+            jsonify(response_dict),
             200,
         )
 
@@ -104,15 +83,17 @@ class NewsletterByID(Resource):
 
     def patch(self, id):
 
-        newsletter = Newsletter.query.filter_by(id=id).first()
+        record = Newsletter.query.filter_by(id=id).first()
         for attr in request.form:
-            setattr(newsletter, attr, request.form[attr])
+            setattr(record, attr, request.form[attr])
 
-        db.session.add(newsletter)
+        db.session.add(record)
         db.session.commit()
 
+        response_dict = record.to_dict()
+
         response = make_response(
-            newsletter_schema.dump(newsletter),
+            jsonify(response_dict),
             200
         )
 
