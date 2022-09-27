@@ -1,4 +1,4 @@
-# HATEOAS and Marshmallow
+# Bonus: HATEOAS and Marshmallow
 
 ## Learning Goals
 
