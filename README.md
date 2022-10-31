@@ -140,7 +140,7 @@ from flask_restful import Api, Resource
 from models import db, Newsletter
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/newsletters.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///newsletters.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 
@@ -260,7 +260,7 @@ from flask_restful import Api, Resource
 from models import db, Newsletter
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/newsletters.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///newsletters.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 
@@ -391,7 +391,7 @@ api.add_resource(NewsletterByID, '/newsletters/<int:id>')
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5555)
 
 ```
 
