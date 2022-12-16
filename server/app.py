@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, request, make_response
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
@@ -26,7 +26,7 @@ class Index(Resource):
         }
         
         response = make_response(
-            jsonify(response_dict),
+            response_dict,
             200,
         )
 
@@ -41,7 +41,7 @@ class Newsletters(Resource):
         response_dict_list = [n.to_dict() for n in Newsletter.query.all()]
 
         response = make_response(
-            jsonify(response_dict_list),
+            response_dict_list,
             200,
         )
 
@@ -60,7 +60,7 @@ class Newsletters(Resource):
         response_dict = new_record.to_dict()
 
         response = make_response(
-            jsonify(response_dict),
+            response_dict,
             201,
         )
 
@@ -75,7 +75,7 @@ class NewsletterByID(Resource):
         response_dict = Newsletter.query.filter_by(id=id).first().to_dict()
 
         response = make_response(
-            jsonify(response_dict),
+            response_dict,
             200,
         )
 
@@ -93,7 +93,7 @@ class NewsletterByID(Resource):
         response_dict = record.to_dict()
 
         response = make_response(
-            jsonify(response_dict),
+            response_dict,
             200
         )
 
@@ -109,7 +109,7 @@ class NewsletterByID(Resource):
         response_dict = {"message": "record successfully deleted"}
 
         response = make_response(
-            jsonify(response_dict),
+            response_dict,
             200
         )
 
@@ -119,4 +119,4 @@ api.add_resource(NewsletterByID, '/newsletters/<int:id>')
 
 
 if __name__ == '__main__':
-    app.run(port=5555)
+    app.run(port=5555, debug=True)

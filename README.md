@@ -60,7 +60,7 @@ for that!
 
 ## Setting up Flask-Marshmallow
 
-Run `pipenv install && pipenv shell` to create and enter your virtual
+Run `pipenv install; pipenv shell` to create and enter your virtual
 environment. In addition to the modules from earlier Phase 4 lessons, this will
 install two new libraries: Flask-Marshmallow and Marshmallow-SQLAlchemy.
 
@@ -86,7 +86,7 @@ This means that we can remove all of the SQLAlchemy-Serializer code from
 `models.py`:
 
 ```py
-# newsletters/models.py
+# server/models.py
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -128,11 +128,11 @@ Enter the following in `newsletters/app.py`, before the definitions of your
 routes:
 
 ```py
-# newsletters/app.py
+# server/app.py
 
 #!/usr/bin/env python3
 
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, request, make_response
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
@@ -203,7 +203,7 @@ replaced with the `schema.dump()` method, which will convert our records from
 SQL to JSON (no need for `jsonify`!). Let's look at one example below:
 
 ```py
-# newsletters/app.py
+# server/app.py
 
 class Newsletters(Resource):
 
@@ -252,7 +252,7 @@ career.
 ```py
 #!/usr/bin/env python3
 
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, request, make_response
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
@@ -302,7 +302,7 @@ class Index(Resource):
         }
         
         response = make_response(
-            jsonify(response_dict),
+            response_dict,
             200,
         )
 
@@ -381,7 +381,7 @@ class NewsletterByID(Resource):
         response_dict = {"message": "record successfully deleted"}
 
         response = make_response(
-            jsonify(response_dict),
+            response_dict,
             200
         )
 
@@ -391,7 +391,7 @@ api.add_resource(NewsletterByID, '/newsletters/<int:id>')
 
 
 if __name__ == '__main__':
-    app.run(port=5555)
+    app.run(port=5555, debug=True)
 
 ```
 
