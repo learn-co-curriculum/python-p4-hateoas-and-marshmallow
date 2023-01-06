@@ -69,7 +69,7 @@ Marshmallow-SQLAlchemy will actually be installed as an extension to
 Flask-Marshmallow and provide us with tools to automate some of the mappings
 between our models and serializer schema.
 
-Enter the `newsletters/` directory and enter the following commands to create
+Enter the `server/` directory and enter the following commands to create
 and seed your database:
 
 ```console
@@ -124,7 +124,7 @@ application.
 > **IMPORTANT: A Marshmallow instance _must_ be instantiated after our database.
 > The interpreter will throw all sorts of errors if we do it before!**
 
-Enter the following in `newsletters/app.py`, before the definitions of your
+Enter the following in `server/app.py`, before the definitions of your
 routes:
 
 ```py
