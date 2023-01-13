@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+faker = "14.2.0"
 flask = "2.2.2"
 flask-marshmallow = "0.14.0"
 flask-migrate = "3.1.0"
