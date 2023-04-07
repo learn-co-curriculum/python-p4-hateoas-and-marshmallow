@@ -5,8 +5,6 @@ from faker import Faker
 from app import app
 from models import db, Newsletter
 
-db.init_app(app)
-
 with app.app_context():
     
     fake = Faker()
