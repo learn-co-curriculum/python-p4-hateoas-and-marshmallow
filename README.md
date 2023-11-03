@@ -4,7 +4,7 @@
 
 - Build RESTful APIs that are easy to navigate and use in applications.
 
-***
+---
 
 ## Key Vocab
 
@@ -12,32 +12,32 @@
   applications that use HTTP in a consistent, human-readable, machine-readable
   way.
 - **Application Programming Interface (API)**: a software application that
-  allows two or more software applications to communicate with one another.
-  Can be standalone or incorporated into a larger product.
+  allows two or more software applications to communicate with one another. Can
+  be standalone or incorporated into a larger product.
 - **HTTP Request Method**: assets of HTTP requests that tell the server which
   actions the client is attempting to perform on the located resource.
 - **`GET`**: the most common HTTP request method. Signifies that the client is
   attempting to view the located resource.
 - **`POST`**: the second most common HTTP request method. Signifies that the
   client is attempting to submit a form to create a new resource.
-- **`PATCH`**: an HTTP request method that signifies that the client is attempting
-  to update a resource with new information.
+- **`PATCH`**: an HTTP request method that signifies that the client is
+  attempting to update a resource with new information.
 - **`PUT`**: an HTTP request method that signifies that the client is attempting
   to update a resource with new information contained in a complete record.
 - **`DELETE`**: an HTTP request method that signifies that the client is
   attempting to delete a resource.
 
-***
+---
 
 ## Introduction
 
-In our bonus lesson on REST philosophy, we briefly mentioned that a key
-element to creating a uniform and accessible interface is replacing indexed
-resources with their URLs. We call this concept Hypertext as the Engine of
-Application state, or **HATEOAS**. Because REST applications are stateless,
-with no knowledge of past requests to help guide users, URLs can be used to
-give those users the information that they need to find new resources from
-a starting resource.
+In our bonus lesson on REST philosophy, we briefly mentioned that a key element
+to creating a uniform and accessible interface is replacing indexed resources
+with their URLs. We call this concept Hypertext as the Engine of Application
+state, or **HATEOAS**. Because REST applications are stateless, with no
+knowledge of past requests to help guide users, URLs can be used to give those
+users the information that they need to find new resources from a starting
+resource.
 
 This provides a bit of a problem on our end: how can we generate these URLs to
 implement HATEOAS in our application? There are several solutions available
@@ -47,8 +47,8 @@ to switch to a serializer hyper-focused on HATEOAS: **Marshmallow**.
 Marshmallow is not quite as hands-free as SQLAlchemy-Serializer, so it's
 important to figure out what functionality you need before you begin work on
 your application. A good rule of thumb when serializing in Flask: if you're
-using REST, use Marshmallow. If you want to define a unique format for
-your serialized data, use Marshmallow. If you don't need these extra features,
+using REST, use Marshmallow. If you want to define a unique format for your
+serialized data, use Marshmallow. If you don't need these extra features,
 SQLAlchemy-Serializer is simpler to implement and a good choice to get your app
 working quickly. Flask gives you a ton of options for extensions- remember to
 explore your options whenever you get started on a new app!
@@ -56,21 +56,21 @@ explore your options whenever you get started on a new app!
 That being said, this is a lesson on HATEOAS- we're definitely using Marshmallow
 for that!
 
-***
+---
 
 ## Setting up Flask-Marshmallow
 
-Run `pipenv install; pipenv shell` to create and enter your virtual
-environment. In addition to the modules from earlier Phase 4 lessons, this will
-install two new libraries: Flask-Marshmallow and Marshmallow-SQLAlchemy.
+Run `pipenv install; pipenv shell` to create and enter your virtual environment.
+In addition to the modules from earlier Phase 4 lessons, this will install two
+new libraries: Flask-Marshmallow and Marshmallow-SQLAlchemy.
 
 Flask-Marshmallow will wrap our Flask application instance.
 Marshmallow-SQLAlchemy will actually be installed as an extension to
 Flask-Marshmallow and provide us with tools to automate some of the mappings
 between our models and serializer schema.
 
-Enter the `server/` directory and enter the following commands to create
-and seed your database:
+Enter the `server/` directory and enter the following commands to create and
+seed your database:
 
 ```console
 $ flask db upgrade
@@ -117,15 +117,13 @@ schema, or blueprint. This is a similar idea to a schema in SQL, but make sure
 you don't get them confused: a serializer's schema informs a server how to
 present data. A database schema informs a server how to store data.
 
-Before defining our schema, we have to instantiate Marshmallow. This requires
-us to import Marshmallow and initialize with an instance of the Flask
-application.
+Before defining our schema, we have to instantiate Marshmallow. This requires us
+to import Marshmallow and initialize with an instance of the Flask application.
 
 > **IMPORTANT: A Marshmallow instance _must_ be instantiated after our database.
 > The interpreter will throw all sorts of errors if we do it before!**
 
-Enter the following in `server/app.py`, before the definitions of your
-routes:
+Enter the following in `server/app.py`, before the definitions of your routes:
 
 ```py
 # server/app.py
@@ -150,8 +148,8 @@ db.init_app(app)
 ma = Marshmallow(app)
 ```
 
-Not much new here- we're just importing some helpful libraries and
-instantiating Marshmallow with the Flask application instance we've created.
+Not much new here- we're just importing some helpful libraries and instantiating
+Marshmallow with the Flask application instance we've created.
 
 Next, we're going to configure our schema:
 
@@ -208,7 +206,7 @@ SQL to JSON (no need for `jsonify`!). Let's look at one example below:
 class Newsletters(Resource):
 
     def get(self):
-        
+
         newsletters = Newsletter.query.all()
 
         response = make_response(
@@ -220,12 +218,12 @@ class Newsletters(Resource):
 
 ```
 
-Here, we carry out most tasks as normal: create, retrieve, update, delete in
-the database with SQLAlchemy, then make a response object.
+Here, we carry out most tasks as normal: create, retrieve, update, delete in the
+database with SQLAlchemy, then make a response object.
 
 In making our response object, we use `newsletters_schema.dump()` to get the
-JSON for multiple newsletter records into the response object, then return it
-as normal. Running your server with `flask run`, you should see a list of
+JSON for multiple newsletter records into the response object, then return it as
+normal. Running your server with `flask run`, you should see a list of
 newsletter titles and publication times with URLs for their single records and
 the full list of newsletter records.
 
@@ -234,7 +232,7 @@ of `to_dict()` and replace with `schema.dump()` to show our new,
 HATEOAS-compliant views to our user base. (Full solution code is available
 below.)
 
-***
+---
 
 ## Conclusion
 
@@ -245,7 +243,7 @@ tool designed to help developers implement HATEOAS into their applications, and
 will be an important tool in streamlining the creation of RESTful APIs in your
 career.
 
-***
+---
 
 ## Solution Code
 
@@ -296,11 +294,11 @@ api = Api(app)
 class Index(Resource):
 
     def get(self):
-        
+
         response_dict = {
             "index": "Welcome to the Newsletter RESTful API",
         }
-        
+
         response = make_response(
             response_dict,
             200,
@@ -313,7 +311,7 @@ api.add_resource(Index, '/')
 class Newsletters(Resource):
 
     def get(self):
-        
+
         newsletters = Newsletter.query.all()
 
         response = make_response(
@@ -324,7 +322,7 @@ class Newsletters(Resource):
         return response
 
     def post(self):
-        
+
         new_newsletter = Newsletter(
             title=request.form['title'],
             body=request.form['body'],
@@ -374,7 +372,7 @@ class NewsletterByID(Resource):
     def delete(self, id):
 
         record = Newsletter.query.filter_by(id=id).first()
-        
+
         db.session.delete(record)
         db.session.commit()
 
