@@ -158,6 +158,7 @@ class NewsletterSchema(ma.SQLAlchemySchema):
 
     class Meta:
         model = Newsletter
+        load_instance = True
 
     title = ma.auto_field()
     published_at = ma.auto_field()
@@ -184,7 +185,9 @@ this means that these are the only attributes that will appear when we look at
 newsletters- HATEOAS specifies that we should limit what is shown in
 collections- but that this can be overridden for single-record views with
 additional schemas. For the time being, we're only going to write one. (It would
-be great practice to write the second on your own, though!)
+be great practice to write the second on your own, though!) The statement
+`load_instance=True` is optional and indicates model instances should be
+deserialize.
 
 Next, we set up URLs for single records and for the full collection on each
 record. This will help users- especially of the application variety- navigate
